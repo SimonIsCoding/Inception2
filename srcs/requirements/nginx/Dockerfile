@@ -1,9 +1,14 @@
 FROM	debian:bullseye
 
-RUN		apt update && apt upgrade && apt install -y nginx
-RUN		echo "before copying"
+RUN		apt update && apt upgrade && apt install -y nginx openssl
+RUN 	mkdir -p /etc/nginx/ssl && \
+	    openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
+	    -keyout /etc/nginx/ssl/nginx.key \
+	    -out /etc/nginx/ssl/nginx.crt \
+	    -subj "/C=ES/L=Barcelona/CN=simarcha.42.fr"
+
 COPY	default /etc/nginx/sites-available/.
-RUN		echo "after copying"
-RUN		cat /etc/nginx/sites-available/default
+
+EXPOSE	443
 
 CMD		["nginx", "-g", "daemon off;"]
