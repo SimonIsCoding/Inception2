@@ -3,7 +3,6 @@ FROM 	debian:bullseye
 RUN		apt update && apt upgrade && apt install -y php-fpm \
 		php-mysqli \
 		curl
-#RUN which php-fpm || ls /usr/sbin/
 RUN 	mkdir -p /run/php /var/www/html && \
     	chown -R www-data:www-data /run/php /var/www/html && \
     	chmod -R 755 /var/www/html
