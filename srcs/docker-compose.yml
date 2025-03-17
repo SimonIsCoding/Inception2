@@ -29,6 +29,25 @@ services:
       - /home/simon/data/maria_database:/var/lib/mysql
     networks:
       inception:
+  redis:
+    build: requirements/bonus/redis/.
+    container_name: redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - /home/simon/data/redis_data:/data
+    networks:
+      inception:
+  ftp:
+    build: requirements/bonus/ftp/.
+    container_name: ftp
+    ports:
+      - "20:20"
+      - "21:21"
+    volumes:
+      - /home/simon/data/ftp:
+    networks:
+      inception:
 
 networks:
   inception:
