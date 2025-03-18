@@ -45,7 +45,7 @@ services:
       - "20:20"
       - "21:21"
     volumes:
-      - /home/simon/data/ftp:
+      - /home/simon/data/wp_web:/var/www/html
     networks:
       inception:
 
