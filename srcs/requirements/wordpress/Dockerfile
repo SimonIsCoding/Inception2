@@ -1,6 +1,6 @@
 FROM 	debian:bullseye
 
-RUN		apt update && apt upgrade && apt install -y php-fpm \
+RUN		apt update && apt upgrade -y && apt install -y php-fpm \
 		php-mysqli \
 		curl
 RUN 	mkdir -p /run/php /var/www/html && \
