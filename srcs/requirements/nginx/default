@@ -19,28 +19,26 @@ server {
 		try_files $uri $uri/ =404;
 	}
 
-	location /files/ {
-        alias /home/ftpuser/ftp/;
-        autoindex on;  # Active l'affichage des fichiers si aucun index.html
-    }
-	# pass PHP scripts to FastCGI server
-	#
-	location ~ \.php$ {
-		include snippets/fastcgi-php.conf;
-	#	# With php-fpm (or other unix sockets):
-#		fastcgi_pass unix:/run/php/php7.4-fpm.sock;
-	#	# With php-cgi (or other tcp sockets):
-		fastcgi_pass wp-php:9000;
-#	    fastcgi_index index.php;
-#	    fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+	#BONUS
+	location /static_website {
+	    proxy_pass http://static_website:80;
 	}
 
-	# deny access to .htaccess files, if Apache's document root
-	# concurs with nginx's one
-	#
-	#location ~ /\.ht {
-	#	deny all;
-	#}
+	#BONUS
+	location /adminer {
+    	proxy_pass http://adminer:8080;
+	    proxy_set_header Host $host;
+	    proxy_set_header X-Real-IP $remote_addr;
+	    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+	    proxy_set_header X-Forwarded-Proto $scheme;
+	}
+
+	# pass PHP scripts to FastCGI server
+	location ~ \.php$ {
+		include snippets/fastcgi-php.conf;
+		fastcgi_pass wp-php:9000;
+	}
+
 }
 
 
