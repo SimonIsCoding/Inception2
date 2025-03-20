@@ -1,0 +1,10 @@
+[sshd]
+enabled = false
+
+[nginx-http-auth]
+enabled = true
+port = http,https
+filter = nginx-http-auth
+logpath = /var/log/nginx/access.log
+maxretry = 3
+bantime = 600

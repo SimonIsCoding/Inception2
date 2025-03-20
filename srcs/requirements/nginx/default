@@ -21,6 +21,7 @@ server {
 
 	#BONUS
 	location /static_website {
+		alias /usr/share/nginx/html; 
 	    proxy_pass http://static_website:80;
 	}
 
@@ -47,7 +48,7 @@ server {
     server_name static_website.local;
 
     root /usr/share/nginx/html;
-    index index.html;
+    index index2.html;
 
     location / {
         try_files $uri $uri/ =404;

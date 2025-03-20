@@ -11,6 +11,7 @@ services:
       - "443:443"
     volumes:
       - /home/simon/data/wp_web:/var/www/html
+      - /var/log/nginx:/var/log/nginx
     networks:
       inception:
   wordpress:
@@ -64,6 +65,16 @@ services:
       - "8081:80"
     volumes:
       - ./requirements/bonus/static_website/html/.:/usr/share/nginx/html/.:ro
+    networks:
+      inception:
+  fail2ban:
+    build: requirements/bonus/fail2ban/.
+    container_name: fail2ban
+    cap_add:
+      - NET_ADMIN  # Permet de modifier iptables
+    volumes:
+      - /var/log/nginx:/var/log/nginx:ro
+      - ./requirements/bonus/fail2ban/jail.local:/etc/fail2ban/jail.local  # Configuration personnalisée
     networks:
       inception:
 
