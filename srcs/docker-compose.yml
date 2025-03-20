@@ -63,7 +63,7 @@ services:
     ports:
       - "8081:80"
     volumes:
-      - ./requirements/bonus/static_website/.:/usr/share/nginx/html
+      - ./requirements/bonus/static_website/html/.:/usr/share/nginx/html/.:ro
     networks:
       inception:
 

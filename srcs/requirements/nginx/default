@@ -41,6 +41,18 @@ server {
 
 }
 
+server {
+    listen 80;
+
+    server_name static_website.local;
+
+    root /usr/share/nginx/html;
+    index index.html;
+
+    location / {
+        try_files $uri $uri/ =404;
+    }
+}
 
 # Virtual Host configuration for example.com
 #
