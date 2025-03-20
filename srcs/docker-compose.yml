@@ -61,8 +61,8 @@ services:
   static_website:
     build: requirements/bonus/static_website/.
     container_name: static_website
-    ports:
-      - "8081:80"
+      #    ports:
+      #      - "8081:80"
     volumes:
       - ./requirements/bonus/static_website/html/.:/usr/share/nginx/html/.:ro
     networks:
@@ -74,7 +74,7 @@ services:
       - NET_ADMIN  # Permet de modifier iptables
     volumes:
       - /var/log/nginx:/var/log/nginx:ro
-      - ./requirements/bonus/fail2ban/jail.local:/etc/fail2ban/jail.local  # Configuration personnalisée
+      - ./requirements/bonus/fail2ban/jail.local:/etc/fail2ban/jail.local
     networks:
       inception:
 
