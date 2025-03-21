@@ -12,6 +12,8 @@ services:
     volumes:
       - /home/simon/data/wp_web:/var/www/html
       - /var/log/nginx:/var/log/nginx
+    env_file:
+      - .env
     networks:
       inception:
   wordpress:
@@ -21,6 +23,8 @@ services:
       - mariadb
     volumes:
       - /home/simon/data/wp_web:/var/www/html
+    env_file:
+      - .env
     networks:
       inception:
   mariadb:
@@ -28,6 +32,8 @@ services:
     container_name: mariadb
     volumes:
       - /home/simon/data/maria_database:/var/lib/mysql
+    env_file:
+      - .env
     networks:
       inception:
   redis:
@@ -47,6 +53,8 @@ services:
       - "21:21"
     volumes:
       - /home/simon/data/wp_web:/var/www/html
+    env_file:
+      - .env
     networks:
       inception:
   adminer:
@@ -61,8 +69,8 @@ services:
   static_website:
     build: requirements/bonus/static_website/.
     container_name: static_website
-      #    ports:
-      #      - "8081:80"
+    ports:
+      - "8081:80"
     volumes:
       - ./requirements/bonus/static_website/html/.:/usr/share/nginx/html/.:ro
     networks:
