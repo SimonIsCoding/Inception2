@@ -10,23 +10,25 @@ services:
     ports:
       - "443:443"
     volumes:
-      - /home/simon/data/wp_web:/var/www/html
+      - /home/$USERNAME_SESSION/data/wp_web:/var/www/html
       - /var/log/nginx:/var/log/nginx
     env_file:
       - .env
     networks:
       inception:
+    restart: on-failure
   wordpress:
     build: requirements/wordpress/.
     container_name: wp-php
     depends_on:
       - mariadb
     volumes:
-      - /home/simon/data/wp_web:/var/www/html
+      - /home/$USERNAME_SESSION/data/wp_web:/var/www/html
     env_file:
       - .env
     networks:
       inception:
+    restart: on-failure
   mariadb:
     build: requirements/mariadb/.
     container_name: mariadb
@@ -34,20 +36,22 @@ services:
       WP_USER: ${WP_USER}
       WP_PASSWORD: ${WP_PASSWORD}
     volumes:
-      - /home/simon/data/maria_database:/var/lib/mysql
+      - /home/$USERNAME_SESSION/data/maria_database:/var/lib/mysql
     env_file:
       - .env
     networks:
       inception:
+    restart: on-failure
   redis:
     build: requirements/bonus/redis/.
     container_name: redis
     ports:
       - "6379:6379"
     volumes:
-      - /home/simon/data/redis_data:/data
+      - /home/$USERNAME_SESSION/data/redis_data:/data
     networks:
       inception:
+    restart: on-failure
   ftp:
     build: requirements/bonus/ftp/.
     container_name: ftp
@@ -55,11 +59,12 @@ services:
       - "20:20"
       - "21:21"
     volumes:
-      - /home/simon/data/wp_web:/var/www/html
+      - /home/$USERNAME_SESSION/data/wp_web:/var/www/html
     env_file:
       - .env
     networks:
       inception:
+    restart: on-failure
   adminer:
     build: requirements/bonus/adminer/.
     container_name: adminer
@@ -69,6 +74,7 @@ services:
       - mariadb
     networks:
       inception:
+    restart: on-failure
   static_website:
     build: requirements/bonus/static_website/.
     container_name: static_website
@@ -78,6 +84,7 @@ services:
       - ./requirements/bonus/static_website/html/.:/usr/share/nginx/html/.:ro
     networks:
       inception:
+    restart: on-failure
   fail2ban:
     build: requirements/bonus/fail2ban/.
     container_name: fail2ban
@@ -88,6 +95,7 @@ services:
       - ./requirements/bonus/fail2ban/jail.local:/etc/fail2ban/jail.local
     networks:
       inception:
+    restart: on-failure
 
 networks:
   inception:
