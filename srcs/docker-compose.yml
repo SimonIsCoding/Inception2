@@ -7,11 +7,15 @@ services:
     depends_on:
       - wordpress
       - mariadb
+      - static_website
     ports:
       - "443:443"
     volumes:
       - /home/$USERNAME_SESSION/data/wp_web:/var/www/html
       - /var/log/nginx:/var/log/nginx
+      - /home/$USERNAME_SESSION/data/static_website:/usr/share/nginx/html
+        #      - static_data:/var/www/static_website
+        #      - /home/$USERNAME_SESSION/data/static_website:/var/www/static_website
     env_file:
       - .env
     networks:
@@ -81,7 +85,11 @@ services:
     ports:
       - "8081:80"
     volumes:
-      - ./requirements/bonus/static_website/html/.:/usr/share/nginx/html/.:ro
+      - static_data:/usr/share/nginx/html
+        #- /home/$USERNAME_SESSION/data/static_website:/usr/share/nginx/html
+      #      - ./requirements/bonus/static_website/html/.:/usr/share/nginx/html/.:ro
+    env_file:
+      - .env
     networks:
       inception:
     restart: on-failure
@@ -97,5 +105,7 @@ services:
       inception:
     restart: on-failure
 
+volumes:
+  static_data:
 networks:
   inception:
