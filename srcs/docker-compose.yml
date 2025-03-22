@@ -30,6 +30,9 @@ services:
   mariadb:
     build: requirements/mariadb/.
     container_name: mariadb
+    environment:
+      WP_USER: ${WP_USER}
+      WP_PASSWORD: ${WP_PASSWORD}
     volumes:
       - /home/simon/data/maria_database:/var/lib/mysql
     env_file:

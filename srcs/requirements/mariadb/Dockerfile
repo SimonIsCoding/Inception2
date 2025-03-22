@@ -1,5 +1,11 @@
 FROM	debian:bullseye
 
+ARG 	WP_USER
+ARG		WP_PASSWORD
+
+ENV		WP_USER=${WP_USER}
+ENV		WP_PASSWORD=${WP_PASSWORD}
+
 RUN		apt update && apt upgrade -y && apt install -y mariadb-server
 
 COPY	50-server.cnf	/etc/mysql/mariadb.conf.d/.
