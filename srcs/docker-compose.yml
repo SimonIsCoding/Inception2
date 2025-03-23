@@ -10,10 +10,12 @@ services:
       - static_website
     ports:
       - "443:443"
+    command: cp /usr/share/nginx/html/index.html /home/$USERNAME_SESSION/data/static_website
     volumes:
       - /home/$USERNAME_SESSION/data/wp_web:/var/www/html
       - /var/log/nginx:/var/log/nginx
       - /home/$USERNAME_SESSION/data/static_website:/usr/share/nginx/html
+      - /home/$USERNAME_SESSION/data/static_website:/home/$USERNAME_SESSION/data/static_website 
         #      - static_data:/var/www/static_website
         #      - /home/$USERNAME_SESSION/data/static_website:/var/www/static_website
     env_file:
