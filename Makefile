@@ -4,27 +4,15 @@ all:
 stop:
 	cd ./srcs && docker-compose down
 
+status:
+	docker ps
+
 clean:
-#	sudo chown -R $(whoami) /home/simon/data
-	rm -rf /home/simon/data/*
-#	echo "1"
-#	@if [ -n "$$(docker ps -qa)" ]; then \
-		docker rm -f $$(docker ps -qa); \
-	fi
-#	echo "2"
-#	@if [ -n "$$(docker images -qa)" ]; then \
-		docker rmi -f $$(docker images -qa); \
-	fi
-#	echo "3"
-#	@if [ -n "$$(docker volume ls -q)" ]; then \
-		docker volume rm -f $$(docker volume ls -q); \
-	fi
-#	echo "4"
-#	@if [ -n "$$(docker network ls -q)" ]; then \
-		docker network rm -f $$(docker network ls -q) 2>/dev/null; \
-	fi
-#	echo "5"
-	docker system prune -a --volume
+	docker ps -qa | xargs -r docker rm || true
+	docker images -q | xargs -r docker rmi -f || true
+	docker volume ls -q | xargs -r docker volume rm || true
+	docker network ls -q | xargs -r docker network rm || true
+	sudo rm -rf /home/simon/data 
 
 fclean: stop clean
 
