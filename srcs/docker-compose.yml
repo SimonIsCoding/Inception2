@@ -7,14 +7,15 @@ services:
     depends_on:
       - wordpress
       - mariadb
-      - static_website
+      - static
     ports:
       - "443:443"
         #    command: cp /usr/share/nginx/html/index.html /home/$USERNAME_SESSION/data/static_website
     volumes:
       - /home/$USERNAME_SESSION/data/wp_web:/var/www/html
-      - /var/log/nginx:/var/log/nginx
-      - /home/$USERNAME_SESSION/data/static_website:/usr/share/nginx/html
+      - static:/usr/share/nginx/html
+        #      - /var/log/nginx:/var/log/nginx
+        #      - /home/$USERNAME_SESSION/data/static_website:/usr/share/nginx/html
         #      - static_data:/var/www/static_website
         #      - /home/$USERNAME_SESSION/data/static_website:/var/www/static_website
     env_file:
@@ -80,20 +81,34 @@ services:
     networks:
       inception:
     restart: on-failure
-  static_website:
-    build: requirements/bonus/static_website/.
-    container_name: static_website
-    ports:
-      - "8081:80"
-    volumes:
-      - static_data:/usr/share/nginx/html
+      #  static_website:
+      #    build: requirements/bonus/static_website/.
+      #    container_name: static_website
+      #    ports:
+      #      - "8081:80"
+      #    volumes:
+      #      - static_data:/usr/share/nginx/html
         #- /home/$USERNAME_SESSION/data/static_website:/usr/share/nginx/html
       #      - ./requirements/bonus/static_website/html/.:/usr/share/nginx/html/.:ro
+      #    env_file:
+      #      - .env
+      #    networks:
+      #inception:
+      #    restart: on-failure
+  static:
+    container_name: static
+    image: static:42
+    init: true
+    build:
+      context: ./requirements/bonus/static_website
+      dockerfile: Dockerfile
+    networks:
+      - inception
     env_file:
       - .env
-    networks:
-      inception:
-    restart: on-failure
+    volumes:
+      - static:/usr/src/app
+    restart: always
   fail2ban:
     build: requirements/bonus/fail2ban/.
     container_name: fail2ban
@@ -107,6 +122,9 @@ services:
     restart: on-failure
 
 volumes:
-  static_data:
+  static:
+    name: static
+    external: true
+
 networks:
   inception:
