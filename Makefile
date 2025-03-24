@@ -6,6 +6,8 @@ all:
 stop:
 	cd ./srcs && docker-compose down
 
+retry: stop all
+
 status:
 	docker ps
 

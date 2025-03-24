@@ -1,14 +1,30 @@
-FROM	nginx:alpine
+# Base image
+FROM 		debian:bullseye
 
-RUN		rm -rf /usr/share/nginx/html/*
+# Update and upgrade system & install nodejs and npm
+RUN 		apt -y update && apt -y upgrade
+RUN 		apt -y install nodejs npm
 
-# Copier le site statique dans le conteneur
-COPY	./static_website_files/index.html /usr/share/nginx/html/.
+# Create the working directory
+RUN			mkdir -p /usr/src/app
 
-#COPY 	script.sh /usr/local/bin/
-#RUN		chmod +x /usr/local/bin/script.sh
+# Set the working directory
+WORKDIR		/usr/src/app
 
-EXPOSE	80
+# Copy the package.json file
+COPY		./conf/ .
 
-#CMD		["/usr/local/bin/script.sh"]
-CMD		["nginx", "-g", "daemon off;"]
+# Install the dependencies
+RUN			npm install
+
+# Copy the source code
+RUN         mkdir -p /usr/src/app/public
+COPY        ./srcs/public/ /usr/src/app/public/
+RUN         mkdir -p /usr/src/app/src
+COPY        ./srcs/src/ /usr/src/app/src/
+
+# Expose port
+EXPOSE		3000
+
+# Run the application
+ENTRYPOINT	[ "npm", "start" ]
