@@ -81,20 +81,6 @@ services:
     networks:
       inception:
     restart: on-failure
-      #  static_website:
-      #    build: requirements/bonus/static_website/.
-      #    container_name: static_website
-      #    ports:
-      #      - "8081:80"
-      #    volumes:
-      #      - static_data:/usr/share/nginx/html
-        #- /home/$USERNAME_SESSION/data/static_website:/usr/share/nginx/html
-      #      - ./requirements/bonus/static_website/html/.:/usr/share/nginx/html/.:ro
-      #    env_file:
-      #      - .env
-      #    networks:
-      #inception:
-      #    restart: on-failure
   static:
     container_name: static
     image: static:42
@@ -124,7 +110,7 @@ services:
 volumes:
   static:
     name: static
-    external: true
+      #    external: true
 
 networks:
   inception:
