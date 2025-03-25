@@ -10,14 +10,9 @@ services:
       - static
     ports:
       - "443:443"
-        #    command: cp /usr/share/nginx/html/index.html /home/$USERNAME_SESSION/data/static_website
     volumes:
       - /home/$USERNAME_SESSION/data/wp_web:/var/www/html
       - static:/usr/share/nginx/html
-        #      - /var/log/nginx:/var/log/nginx
-        #      - /home/$USERNAME_SESSION/data/static_website:/usr/share/nginx/html
-        #      - static_data:/var/www/static_website
-        #      - /home/$USERNAME_SESSION/data/static_website:/var/www/static_website
     env_file:
       - .env
     networks:
@@ -95,22 +90,35 @@ services:
     volumes:
       - static:/usr/src/app
     restart: always
-  fail2ban:
-    build: requirements/bonus/fail2ban/.
-    container_name: fail2ban
-    cap_add:
-      - NET_ADMIN  # Permet de modifier iptables
+      #  fail2ban:
+      #    build: requirements/bonus/fail2ban/.
+      #    container_name: fail2ban
+      #    cap_add:
+      #      - NET_ADMIN  # Permet de modifier iptables
+      #    volumes:
+      #      - /var/log/nginx:/var/log/nginx:ro
+      #      - ./requirements/bonus/fail2ban/jail.local:/etc/fail2ban/jail.local
+      #    networks:
+      #      inception:
+      #    restart: on-failure
+  cadvisor:
+    build: ./requirements/bonus/cadvisor/. # Chemin du Dockerfile
+    container_name: cadvisor
+    restart: unless-stopped
+    ports:
+      - "9090:9090"  # Modifie le port selon tes besoins
+    privileged: true
     volumes:
-      - /var/log/nginx:/var/log/nginx:ro
-      - ./requirements/bonus/fail2ban/jail.local:/etc/fail2ban/jail.local
-    networks:
-      inception:
-    restart: on-failure
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    depends_on:
+      - nginx  # Si tu as un container nginx déjà en place
 
 volumes:
   static:
     name: static
-      #    external: true
-
 networks:
   inception:
