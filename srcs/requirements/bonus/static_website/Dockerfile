@@ -1,30 +1,20 @@
-# Base image
-FROM 		debian:bullseye
+# Étape 1 : Utiliser une image Node.js officielle
+FROM node:18-alpine
 
-# Update and upgrade system & install nodejs and npm
-RUN 		apt -y update && apt -y upgrade
-RUN 		apt -y install nodejs npm
+# Définir le dossier de travail dans le conteneur
+WORKDIR /app
 
-# Create the working directory
-RUN			mkdir -p /usr/src/app
+# Copier les fichiers de configuration
+COPY package.json ./
 
-# Set the working directory
-WORKDIR		/usr/src/app
+# Installer les dépendances
+RUN npm install
 
-# Copy the package.json file
-COPY		./conf/ .
+# Copier le reste des fichiers (index.html, server.js, etc.)
+COPY . .
 
-# Install the dependencies
-RUN			npm install
+# Exposer le port 3000
+EXPOSE 3000
 
-# Copy the source code
-RUN         mkdir -p /usr/src/app/public
-COPY        ./srcs/public/ /usr/src/app/public/
-RUN         mkdir -p /usr/src/app/src
-COPY        ./srcs/src/ /usr/src/app/src/
-
-# Expose port
-EXPOSE		3000
-
-# Run the application
-ENTRYPOINT	[ "npm", "start" ]
+# Définir la commande de démarrage
+ENTRYPOINT ["npm", "start"]
