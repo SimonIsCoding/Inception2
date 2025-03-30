@@ -8,6 +8,7 @@ services:
       - wordpress
       - mariadb
       - static_website
+	  - cadvisor
     ports:
       - "443:443"
     volumes:
@@ -101,7 +102,7 @@ services:
     container_name: cadvisor
     restart: always
     ports:
-      - "8080:8080"
+      - "8080:8080" #cadvisor has to be on #8080
     privileged: true
     volumes:
       - /:/rootfs:ro
