@@ -1,4 +1,5 @@
-FROM	debian:bullseye
+FROM	debian:bullseye-slim
+
 RUN		apt update && apt upgrade -y && apt install -y nginx openssl
 RUN 	mkdir -p /etc/nginx/ssl && \
 	    openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
