@@ -1,5 +1,5 @@
 {
-  "name": "static_website",
+  "name": "static",
   "version": "1.0.0",
   "description": "Site statique simple",
   "main": "server.js",
