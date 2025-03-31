@@ -7,30 +7,31 @@ services:
     depends_on:
       - wordpress
       - mariadb
-      - static
-      - cadvisor
+      - static_website
     ports:
       - "443:443"
     volumes:
-      - /home/$USERNAME_SESSION/data/wp_web:/var/www/html
-      - static:/usr/share/nginx/html
+      - wordpress:/var/www/html
+      - static_website:/usr/share/nginx/html
     env_file:
       - .env
     networks:
       inception:
     restart: always
+
   wordpress:
     build: requirements/wordpress/.
     container_name: wordpress
     depends_on:
       - mariadb
     volumes:
-      - /home/$USERNAME_SESSION/data/wp_web:/var/www/html
+      - wordpress:/var/www/html
     env_file:
       - .env
     networks:
       inception:
     restart: always
+
   mariadb:
     build: requirements/mariadb/.
     container_name: mariadb
@@ -38,22 +39,24 @@ services:
       WP_USER: ${WP_USER}
       WP_PASSWORD: ${WP_PASSWORD}
     volumes:
-      - /home/$USERNAME_SESSION/data/maria_database:/var/lib/mysql
+      - mariadb:/var/lib/mysql
     env_file:
       - .env
     networks:
       inception:
     restart: always
+
   redis:
     build: requirements/bonus/redis/.
     container_name: redis
     ports:
       - "6379:6379"
     volumes:
-      - /home/$USERNAME_SESSION/data/redis_data:/data
+      - redis_data:/data
     networks:
       inception:
-    restart: always 
+    restart: always
+
   ftp:
     build: requirements/bonus/ftp/.
     container_name: ftp
@@ -61,12 +64,13 @@ services:
       - "20:20"
       - "21:21"
     volumes:
-      - /home/$USERNAME_SESSION/data/wp_web:/var/www/html
+      - wordpress:/var/www/html
     env_file:
       - .env
     networks:
       inception:
     restart: always
+
   adminer:
     build: requirements/bonus/adminer/.
     container_name: adminer
@@ -77,9 +81,9 @@ services:
     networks:
       inception:
     restart: always
-  static:
-    container_name: static
-    image: static:42
+
+  static_website:
+    container_name: static_website
     init: true
     build:
       context: ./requirements/bonus/static_website
@@ -89,14 +93,15 @@ services:
     env_file:
       - .env
     volumes:
-      - static:/usr/src/app
+      - static_website:/usr/src/app
     restart: always
+
   cadvisor:
     build: ./requirements/bonus/cadvisor/.
     container_name: cadvisor
     restart: always
     ports:
-      - "8080:8080" #cadvisor has to be on 8080
+      - "8080:8080"
     privileged: true
     volumes:
       - /:/rootfs:ro
@@ -104,11 +109,31 @@ services:
       - /sys:/sys:ro
       - /var/lib/docker/:/var/lib/docker:ro
       - /sys/fs/cgroup:/sys/fs/cgroup:ro
-    networks:
-      - inception
+    depends_on:
+      - nginx
 
 volumes:
-  static:
-    name: static
+  wordpress:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/$USERNAME_SESSION/data/wp_web
+  mariadb:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/$USERNAME_SESSION/data/maria_database
+  redis_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/$USERNAME_SESSION/data/redis_data
+  static_website:
+    name: static_website
+
 networks:
   inception:
+
