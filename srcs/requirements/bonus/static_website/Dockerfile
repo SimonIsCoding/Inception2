@@ -1,5 +1,14 @@
-# Étape 1 : Utiliser une image Node.js officielle
-FROM node:18-alpine
+FROM debian:bullseye-slim
+
+# Étape 2 : Installer les dépendances nécessaires
+RUN apt update && apt install -y \
+    curl \
+    ca-certificates \
+    && curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
+    && apt install -y nodejs \
+    && npm install -g npm \
+    && apt clean \
+    && rm -rf /var/lib/apt/lists/*
 
 # Définir le dossier de travail dans le conteneur
 WORKDIR /app
